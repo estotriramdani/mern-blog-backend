@@ -1,7 +1,23 @@
 const express = require("express");
-const { createBlogPost } = require("../controllers/blog");
+const {
+  createBlogPost,
+  getAllBlogPosts,
+  getBlogPostById,
+  updateBlogPost,
+} = require("../controllers/blog");
+const { body } = require("express-validator");
 const router = express.Router();
 
-router.post("/post", createBlogPost);
+const validation = [
+  body("title").isLength({ min: 5 }).withMessage("Input title tidak sesuai"),
+  body("body").isLength({ min: 5 }).withMessage("Body tidak sesuai"),
+];
+
+router.post("/post", validation, createBlogPost);
+
+router.get("/posts", getAllBlogPosts);
+
+router.get("/post/:postId", getBlogPostById);
+router.put("/post/:postId", validation, updateBlogPost);
 
 module.exports = router;
