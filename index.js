@@ -1,29 +1,29 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const multer = require("multer");
-const path = require("path");
+const express = require('express');
+const mongoose = require('mongoose');
+const multer = require('multer');
+const path = require('path');
 
 const app = express();
-app.use("/images", express.static(path.join(__dirname, "images")));
-const bodyParser = require("body-parser");
+app.use('/images', express.static(path.join(__dirname, 'images')));
+const bodyParser = require('body-parser');
 
-const authRoutes = require("./src/routes/auth");
-const blogRoutes = require("./src/routes/blog");
+const authRoutes = require('./src/routes/auth');
+const blogRoutes = require('./src/routes/blog');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "images");
+    cb(null, 'images');
   },
   filename: (req, file, cb) => {
-    cb(null, new Date().getTime() + "-" + file.originalname);
+    cb(null, new Date().getTime() + '-' + file.originalname);
   },
 });
 
 const fileFilter = (req, file, cb) => {
   if (
-    file.mimetype === "image/png" ||
-    file.mimetype === "image/jpg" ||
-    file.mimetype === "image/jpeg"
+    file.mimetype === 'image/png' ||
+    file.mimetype === 'image/jpg' ||
+    file.mimetype === 'image/jpeg'
   ) {
     cb(null, true);
   } else {
@@ -33,20 +33,21 @@ const fileFilter = (req, file, cb) => {
 
 app.use(bodyParser.json());
 
-app.use(multer({ storage, fileFilter }).single("image"));
+app.use(multer({ storage, fileFilter }).single('image'));
 
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, PATCH, DELETE, OPTIONS"
+    'Access-Control-Allow-Methods',
+    'GET, POST, PUT, PATCH, DELETE, OPTIONS'
   );
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Cache-Control', 's-max-age=1, stale-while-revalidate');
   next();
 });
 
-app.use("/v1/auth", authRoutes);
-app.use("/v1/blog", blogRoutes);
+app.use('/v1/auth', authRoutes);
+app.use('/v1/blog', blogRoutes);
 app.use((error, req, res, next) => {
   const status = error.errorStatus || 500;
   const message = error.message;
@@ -56,9 +57,10 @@ app.use((error, req, res, next) => {
 
 mongoose
   .connect(
-    "mongodb+srv://estotriramdani:wi5FPjdPgjN0qkAf@cluster0.gupjv.mongodb.net/blog?retryWrites=true&w=majority"
+    'mongodb+srv://estotriramdani:wi5FPjdPgjN0qkAf@cluster0.gupjv.mongodb.net/blog?retryWrites=true&w=majority'
   )
   .then(() => {
-    app.listen(4000, () => console.log("Connection success"));
+    // app.listen(4000, () => console.log("Connection success"));
+    module.exports = app;
   })
   .catch((err) => console.log(err));
