@@ -4,7 +4,7 @@
   "description": "REST API NodeJS for MERN Blog",
   "main": "index.js",
   "scripts": {
-    "start": "npx nodemon index.js"
+    "start": "node index.js"
   },
   "author": "Esto Triramdani N",
   "license": "ISC",
