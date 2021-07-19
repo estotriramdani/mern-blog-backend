@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 
 const authRoutes = require('./src/routes/auth');
 const blogRoutes = require('./src/routes/blog');
+const port = process.env.PORT || 4000;
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -60,7 +61,7 @@ mongoose
     'mongodb+srv://estotriramdani:wi5FPjdPgjN0qkAf@cluster0.gupjv.mongodb.net/blog?retryWrites=true&w=majority'
   )
   .then(() => {
-    // app.listen(4000, () => console.log("Connection success"));
-    module.exports = app;
+    app.listen(port, () => console.log('Connection success'));
+    // module.exports = app;
   })
   .catch((err) => console.log(err));
